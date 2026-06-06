@@ -1,0 +1,6 @@
+# Snowmaking Planner - pinned, practical dependencies
+streamlit>=1.36,<2.0
+plotly>=5.22,<6.0
+# Geocoding + forecast use only the Python standard library (urllib), so no
+# extra HTTP client is required. pytest is for local development/testing only.
+pytest>=8.0,<9.0

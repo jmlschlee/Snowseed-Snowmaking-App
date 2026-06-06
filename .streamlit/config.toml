@@ -1,0 +1,19 @@
+# Streamlit theme + server settings for Snowmaking Planner.
+# Pinned light theme so the UI looks consistent across machines/browsers
+# (avoids inheriting a viewer's OS dark mode and washing out text).
+
+[theme]
+base = "light"
+primaryColor = "#1565C0"          # snow-blue accent
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f3f6fb"
+textColor = "#16222e"
+font = "sans serif"
+
+[server]
+headless = true
+# Increase if you expect large forecast payloads; default is plenty here.
+maxUploadSize = 20
+
+[browser]
+gatherUsageStats = false
