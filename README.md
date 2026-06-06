@@ -1,7 +1,8 @@
-# ❄️ Snowmaking Planner
+# ❄️ Snowseed Snowmaking
 
-A polished, beginner-friendly **Streamlit** app that helps a home snowmaker
-plan a session. It answers the questions that actually matter:
+A polished, beginner-friendly **Streamlit** app by Snowseed Snowmaking that
+helps a home snowmaker plan a session. It answers the questions that actually
+matter:
 
 1. **Can I make snow this week?**
 2. **Which nights are best?**

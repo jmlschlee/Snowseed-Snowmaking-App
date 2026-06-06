@@ -2,7 +2,7 @@
 modules/config.py
 =================
 
-Central configuration for the Snowmaking Planner app.
+Central configuration for the Snowseed Snowmaking app.
 
 Everything that a user or maintainer might want to tune lives here:
   * Wet bulb snowmaking quality thresholds (two modes: detailed + strict)
@@ -20,9 +20,9 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 # App metadata
 # ---------------------------------------------------------------------------
-APP_NAME = "Snowmaking Planner"
+APP_NAME = "Snowseed Snowmaking"
 APP_TAGLINE = "Home snowmaking planning, made simple."
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.1"
 
 # ---------------------------------------------------------------------------
 # Wet bulb quality categories

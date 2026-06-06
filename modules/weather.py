@@ -37,7 +37,7 @@ class WeatherError(Exception):
 def _http_get_json(url: str, params: Optional[Dict] = None) -> dict:
     if params:
         url = f"{url}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={"User-Agent": "SnowmakingPlanner/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "SnowseedSnowmaking/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=config.HTTP_TIMEOUT) as resp:
             raw = resp.read().decode("utf-8")

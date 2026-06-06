@@ -1,4 +1,4 @@
-# Streamlit theme + server settings for Snowmaking Planner.
+# Streamlit theme + server settings for Snowseed Snowmaking.
 # Pinned light theme so the UI looks consistent across machines/browsers
 # (avoids inheriting a viewer's OS dark mode and washing out text).
 

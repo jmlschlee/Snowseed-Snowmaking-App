@@ -1,5 +1,5 @@
 """
-app.py - Snowmaking Planner
+app.py - Snowseed Snowmaking
 ===========================
 
 A polished, beginner-friendly Streamlit app for home snowmaking planning.
