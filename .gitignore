@@ -29,3 +29,6 @@ htmlcov/
 *.swp
 .idea/
 .vscode/
+
+# Local preview / launch config
+.claude/

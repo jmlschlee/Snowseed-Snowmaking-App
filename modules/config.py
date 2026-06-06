@@ -22,7 +22,7 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 APP_NAME = "Snowseed Snowmaking"
 APP_TAGLINE = "Home snowmaking planning, made simple."
-APP_VERSION = "1.1.2"
+APP_VERSION = "1.2.0"
 
 # ---------------------------------------------------------------------------
 # Wet bulb quality categories
