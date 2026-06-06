@@ -62,6 +62,51 @@ def night_quality_bar(nights: List[NightSummary]) -> go.Figure:
     return fig
 
 
+def wetbulb_reference_chart() -> go.Figure:
+    """
+    Reproduce the Snow State Wet Bulb Temperature Chart as a heatmap, colored
+    by snowmaking rating (computed via the psychrometric method that matches
+    the published chart). Rows = air temp (F), columns = relative humidity (%).
+    """
+    temps, rhs, grid = wetbulb.build_wetbulb_chart()
+
+    # Map each cell's wet bulb -> rating score for coloring.
+    score = [[wetbulb.rating_score(wetbulb.rate_wet_bulb(v)) for v in row] for row in grid]
+    text = [[str(v) for v in row] for row in grid]
+
+    # Discrete colorscale from Too Warm (low score) to Great (high score).
+    colorscale = [
+        [0.00, config.RATING_COLORS[config.TOO_WARM]],
+        [0.25, config.RATING_COLORS[config.BORDERLINE]],
+        [0.50, config.RATING_COLORS[config.MARGINAL]],
+        [0.75, config.RATING_COLORS[config.GOOD]],
+        [1.00, config.RATING_COLORS[config.EXCELLENT]],
+    ]
+
+    fig = go.Figure(
+        go.Heatmap(
+            z=score,
+            x=[f"{rh}%" for rh in rhs],
+            y=[str(t) for t in temps],
+            text=text,
+            texttemplate="%{text}",
+            textfont={"size": 10, "color": "white"},
+            colorscale=colorscale,
+            showscale=False,
+            hovertemplate="Air %{y}F, RH %{x}<br>Wet bulb %{text}F<extra></extra>",
+        )
+    )
+    fig.update_layout(
+        title="Snow State Wet Bulb Chart (wet bulb F by air temp & humidity)",
+        xaxis_title="Relative humidity",
+        yaxis_title="Air temperature (F)",
+        height=560,
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+    fig.update_yaxes(autorange="reversed")  # coldest at top, like the chart
+    return fig
+
+
 def hourly_wetbulb_line(night: NightSummary) -> go.Figure:
     """Hour-by-hour wet bulb and air temperature for a single night."""
     times = [h.time.strftime("%-I %p") for h in night.hours]

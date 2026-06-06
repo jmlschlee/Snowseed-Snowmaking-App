@@ -23,9 +23,9 @@ def test_electric_hp_with_efficiencies():
     assert math.isclose(res.electric_hp, 4.802, abs_tol=0.01)
     # + 20% margin = 5.76
     assert math.isclose(res.recommended_hp, 5.763, abs_tol=0.01)
-    # Practical recommendation rounds up to the next common motor (7.5 HP here,
-    # since 5.76 > 5.0). The example in the spec says "6 HP minimum" - 7.5 is the
-    # next OFF-THE-SHELF size at/above the 5.76 requirement.
+    # Practical recommendation rounds up to the next whole HP -> 6 HP minimum,
+    # matching the worked example in the spec.
+    assert res.recommended_motor_hp == 6.0
     assert res.recommended_motor_hp >= res.recommended_hp
 
 
@@ -36,9 +36,10 @@ def test_plumbing_loss_adds_to_total_psi():
 
 
 def test_round_up_to_motor():
-    assert pp.round_up_to_motor(5.76) == 7.5
+    assert pp.round_up_to_motor(5.76) == 6.0
     assert pp.round_up_to_motor(2.45) == 3.0
     assert pp.round_up_to_motor(0.4) == 0.5
+    assert pp.round_up_to_motor(6.0) == 6.0
 
 
 def test_high_hp_warning():

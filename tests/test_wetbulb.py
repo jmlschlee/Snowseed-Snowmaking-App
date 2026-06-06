@@ -36,11 +36,64 @@ def test_stull_below_air_temp_when_dry():
     assert tw < 30.0
 
 
-def test_wet_bulb_f_auto_prefers_rh():
-    # auto should use Stull when RH present.
+def test_wet_bulb_f_auto_is_psychrometric():
+    # auto should use the accurate psychrometric method when RH is present.
     via_auto = wb.wet_bulb_f(30.0, rh_percent=50.0, dewpoint_f=10.0, method="auto")
-    via_stull = wb.wet_bulb_stull_f(30.0, 50.0)
-    assert math.isclose(via_auto, via_stull, abs_tol=1e-9)
+    via_psy = wb.wet_bulb_psychrometric_f(30.0, 50.0)
+    assert math.isclose(via_auto, via_psy, abs_tol=1e-9)
+
+
+# --- Validate the psychrometric method against published Snow State cells ---
+# (temp_F, RH%, chart wet bulb F). These are read directly from the official
+# Snow State Wet Bulb Temperature Chart.
+SNOW_STATE_CELLS = [
+    (14, 20, 9),
+    (14, 100, 14),
+    (20, 20, 14),
+    (27, 50, 23),
+    (30, 50, 25),
+    (30, 100, 30),
+    (38, 100, 38),
+    (24, 40, 20),
+]
+
+
+def test_psychrometric_matches_snow_state_chart():
+    for temp, rh, expected in SNOW_STATE_CELLS:
+        got = wb.chart_value(temp, rh)
+        assert abs(got - expected) <= 1, (
+            f"{temp}F/{rh}% -> got {got}, chart says {expected}"
+        )
+
+
+def test_psychrometric_beats_stull_in_cold_dry_air():
+    # At 14F/20% the chart says 9F. Psychrometric should be much closer than Stull.
+    psy = wb.wet_bulb_psychrometric_f(14, 20)
+    stull = wb.wet_bulb_stull_f(14, 20)
+    assert abs(psy - 9) < abs(stull - 9)
+
+
+def test_chart_invariants():
+    temps, rhs, grid = wb.build_wetbulb_chart()
+    # At 100% RH wet bulb equals dry bulb.
+    assert rhs[-1] == 100
+    for i, t in enumerate(temps):
+        assert abs(grid[i][-1] - t) <= 1
+        # Each row is non-decreasing left (dry) to right (humid).
+        for j in range(1, len(rhs)):
+            assert grid[i][j] >= grid[i][j - 1] - 0  # monotonic non-decreasing
+
+
+def test_saturation_vapor_pressure():
+    # e_s at 0C ~ 0.6108 kPa.
+    assert math.isclose(wb.saturation_vapor_pressure_kpa(0.0), 0.6108, abs_tol=1e-4)
+
+
+def test_rh_from_dewpoint():
+    # Dew point == temp -> 100% RH.
+    assert math.isclose(wb.rh_from_dewpoint(30, 30), 100.0, abs_tol=0.5)
+    # Lower dew point -> lower RH.
+    assert wb.rh_from_dewpoint(30, 10) < 100.0
 
 
 def test_rating_detailed_mode():

@@ -126,7 +126,11 @@ with tab_forecast:
     with c3:
         method_label = st.selectbox(
             "Wet bulb method",
-            ["Auto (best available)", "Stull (temp + humidity)", "Dew point (2/3,1/3)"],
+            [
+                "Psychrometric (matches Snow State)",
+                "Stull approximation",
+                "Dew point (2/3,1/3)",
+            ],
         )
     strict = st.toggle(
         "Strict mode (conservative: only 'possible / borderline / too warm')",
@@ -135,8 +139,8 @@ with tab_forecast:
     )
 
     method = {
-        "Auto (best available)": "auto",
-        "Stull (temp + humidity)": "stull",
+        "Psychrometric (matches Snow State)": "psychrometric",
+        "Stull approximation": "stull",
         "Dew point (2/3,1/3)": "dewpoint",
     }[method_label]
 
@@ -281,6 +285,14 @@ with tab_forecast:
                 unsafe_allow_html=True,
             )
 
+    with st.expander("Snow State Wet Bulb Chart (reference)"):
+        st.caption(
+            "Wet bulb (F) for each air temperature and humidity, computed with "
+            "the psychrometric method that matches the official Snow State chart "
+            "(e.g. 14F at 20% RH = 9F wet bulb). Cells are colored by rating."
+        )
+        st.plotly_chart(charts.wetbulb_reference_chart(), use_container_width=True)
+
 
 # ===========================================================================
 # TAB 2 - Nozzle Calculator
@@ -339,6 +351,15 @@ with tab_nozzle:
 
     with st.expander("Nozzle number -> orifice diameter chart"):
         st.table(nozzle_calculator.chart_rows())
+
+    with st.expander("Snow State Nozzle Flow Chart (GPM by nozzle # and PSI)"):
+        st.caption(
+            "Expected flow (GPM) through a system with a given total nozzle "
+            "number at each pressure - reproduced exactly from the formula "
+            "(gpm = nozzle# x sqrt(PSI / 4000))."
+        )
+        st.dataframe(nozzle_calculator.flow_chart_rows(), use_container_width=True,
+                     hide_index=True)
 
 
 # ===========================================================================

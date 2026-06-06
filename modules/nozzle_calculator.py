@@ -47,6 +47,38 @@ def nozzle_number(gpm: float, psi: float) -> float:
     return gpm * math.sqrt(config.NOZZLE_K / psi)
 
 
+def flow_gpm(nozzle_number: float, psi: float) -> float:
+    """
+    Flow rate (GPM) for a given total nozzle number and pressure - the inverse
+    of the nozzle formula, and exactly what the Snow State FLOW chart tabulates.
+
+        gpm = NN * sqrt(PSI / K)
+
+    Verified against the published chart, e.g. NN 6 @ 700 PSI -> 2.5 GPM,
+    NN 60 @ 1200 PSI -> 32.9 GPM.
+    """
+    if nozzle_number <= 0:
+        raise ValueError("Nozzle number must be positive.")
+    if psi <= 0:
+        raise ValueError("PSI must be positive.")
+    return nozzle_number * math.sqrt(psi / config.NOZZLE_K)
+
+
+def flow_chart_rows() -> List[Dict[str, float]]:
+    """
+    Reproduce the Snow State nozzle FLOW chart: for each chart nozzle size,
+    the flow (GPM, 1 decimal) at each standard pressure column, plus orifice.
+    """
+    rows: List[Dict[str, float]] = []
+    for size in _chart_sizes():
+        row: Dict[str, float] = {"Nozzle #": size}
+        for psi in config.FLOW_CHART_PRESSURES:
+            row[f"{psi}"] = round(flow_gpm(size, psi), 1)
+        row["Orifice (in)"] = config.NOZZLE_CHART[size]
+        rows.append(row)
+    return rows
+
+
 def _chart_sizes() -> List[float]:
     return sorted(config.NOZZLE_CHART.keys())
 

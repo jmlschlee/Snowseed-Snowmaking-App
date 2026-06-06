@@ -22,7 +22,7 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 APP_NAME = "Snowmaking Planner"
 APP_TAGLINE = "Home snowmaking planning, made simple."
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 # ---------------------------------------------------------------------------
 # Wet bulb quality categories
@@ -45,12 +45,12 @@ BORDERLINE = "borderline"
 TOO_WARM = "too_warm"
 POSSIBLE = "possible"
 
-# Human-friendly labels
+# Human-friendly labels (match the Snow State Wet Bulb Temperature Chart exactly).
 RATING_LABELS = {
-    EXCELLENT: "Excellent",
-    GOOD: "Good",
-    MARGINAL: "Marginal",
-    BORDERLINE: "Borderline / Slushy",
+    EXCELLENT: "Great Snowmaking",
+    GOOD: "Good Snowmaking",
+    MARGINAL: "Marginal Snowmaking",
+    BORDERLINE: "Borderline",
     TOO_WARM: "Too Warm",
     POSSIBLE: "Possible",
 }
@@ -68,8 +68,9 @@ RATING_COLORS = {
 # Plain-English explanations shown in the UI.
 RATING_EXPLANATIONS = {
     EXCELLENT: (
-        "Excellent snowmaking. Wet bulb is deep enough that a properly set up "
-        "home gun should throw dry, powdery snow with good hang time."
+        "Great snowmaking. Wet bulb is deep enough that a properly set up "
+        "home gun should throw dry, powdery snow with good hang time. Snow "
+        "State notes dry, powdery snow is often produced in the teens."
     ),
     GOOD: (
         "Good snowmaking. You should make solid, reasonably dry snow. "
@@ -180,6 +181,25 @@ NOZZLE_CHART = {
 # Typical snow-gun operating pressure range (PSI) for sanity warnings.
 PSI_MIN_TYPICAL = 100.0
 PSI_MAX_TYPICAL = 1000.0
+
+# Recommended operating pressure (Snow State: ~700 psi for optimal performance
+# across a wide range of temperatures).
+RECOMMENDED_PSI = 700.0
+
+# Pressure columns used by the Snow State nozzle FLOW chart (PSI).
+FLOW_CHART_PRESSURES = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200]
+
+# ---------------------------------------------------------------------------
+# Wet bulb chart grid (matches the Snow State Wet Bulb Temperature Chart axes)
+# ---------------------------------------------------------------------------
+# Dry-bulb air temperature rows (F): 14..38 inclusive.
+WETBULB_CHART_TEMPS_F = list(range(14, 39))
+# Relative humidity columns (%): 20..100 step 5.
+WETBULB_CHART_RH = list(range(20, 101, 5))
+
+# Standard sea-level atmospheric pressure (kPa) used by the psychrometric
+# wet-bulb solver. The Snow State chart is computed at standard pressure.
+STANDARD_PRESSURE_KPA = 101.325
 
 # ---------------------------------------------------------------------------
 # Pump horsepower calculator defaults

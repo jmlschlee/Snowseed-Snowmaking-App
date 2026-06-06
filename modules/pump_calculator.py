@@ -50,20 +50,17 @@ def hydraulic_hp(gpm: float, total_psi: float) -> float:
     return (gpm * total_psi) / config.HP_CONSTANT
 
 
-# Common off-the-shelf single-phase / small three-phase motor sizes (HP).
-_COMMON_MOTOR_HP = [
-    0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 5.0, 7.5, 10.0,
-    15.0, 20.0, 25.0, 30.0, 40.0, 50.0,
-]
-
-
 def round_up_to_motor(hp: float) -> float:
-    """Round up to the next common motor size."""
-    for size in _COMMON_MOTOR_HP:
-        if hp <= size + 1e-9:
-            return size
-    # Beyond the table: round up to the next whole 10 HP.
-    return math.ceil(hp / 10.0) * 10.0
+    """
+    Practical minimum motor size: round the required HP UP to the next whole
+    horsepower (e.g. 5.76 -> 6 HP minimum, matching the worked example).
+    Sub-1 HP keeps a 0.25 HP granularity so tiny pumps aren't over-spec'd.
+    """
+    if hp <= 0:
+        return 0.0
+    if hp < 1.0:
+        return math.ceil(hp * 4.0) / 4.0  # 0.25 HP steps under 1 HP
+    return float(math.ceil(hp))
 
 
 def calculate(

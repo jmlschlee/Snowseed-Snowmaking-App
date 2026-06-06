@@ -60,3 +60,37 @@ def test_invalid_inputs_raise():
         nc.nozzle_number(0, 700)
     with pytest.raises(ValueError):
         nc.nozzle_number(6, 0)
+
+
+# --- Flow lookup (gpm = NN * sqrt(PSI/4000)) vs published Snow State chart ---
+# (nozzle_number, PSI, chart GPM) read from the Snow State Nozzle Flow Chart.
+FLOW_CELLS = [
+    (6, 700, 2.5),
+    (1, 100, 0.2),
+    (25, 500, 8.8),
+    (60, 1200, 32.9),
+    (40, 100, 6.3),
+    (15, 700, 6.3),
+    (13, 700, 5.4),
+]
+
+
+def test_flow_matches_snow_state_chart():
+    for nn, psi, expected in FLOW_CELLS:
+        got = round(nc.flow_gpm(nn, psi), 1)
+        assert abs(got - expected) <= 0.1, f"NN{nn}@{psi} -> {got}, chart {expected}"
+
+
+def test_flow_inverts_nozzle_number():
+    # nozzle_number(gpm, psi) and flow_gpm(nn, psi) are inverses.
+    nn = nc.nozzle_number(6, 700)
+    assert math.isclose(nc.flow_gpm(nn, 700), 6.0, abs_tol=1e-9)
+
+
+def test_flow_invalid_inputs_raise():
+    import pytest
+
+    with pytest.raises(ValueError):
+        nc.flow_gpm(0, 700)
+    with pytest.raises(ValueError):
+        nc.flow_gpm(6, 0)

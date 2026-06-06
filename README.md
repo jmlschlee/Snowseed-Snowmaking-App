@@ -23,16 +23,25 @@ Snowmaking depends on **wet bulb temperature**, which combines air temperature
 water below the air temperature, so you can sometimes make snow even when it's
 above freezing outside.
 
-| Wet bulb (F) | Rating (detailed mode) | What to expect |
+Categories and labels match the official **Snow State Wet Bulb Temperature Chart**:
+
+| Wet bulb (F) | Rating | What to expect |
 |---|---|---|
-| ≤ 20 | **Excellent** | Dry, powdery snow, good hang time |
-| 21–24 | **Good** | Reliable, reasonably dry snow |
-| 25–27 | **Marginal** | Possible but wetter; watch the wind |
-| 28 | **Borderline / Slushy** | Edge of possible; may be slushy |
+| ≤ 20 | **Great Snowmaking** | Dry, powdery snow, good hang time |
+| 21–24 | **Good Snowmaking** | Reliable, reasonably dry snow |
+| 25–27 | **Marginal Snowmaking** | Possible but wetter; watch the wind |
+| 28 | **Borderline** | Edge of possible; may be slushy |
 | ≥ 29 | **Too Warm** | Won't freeze reliably |
 
 A **strict mode** collapses these into *Possible (≤27) / Borderline (28) / Too
 warm (≥29)*. Thresholds are configurable in [`modules/config.py`](modules/config.py).
+
+**Accuracy:** wet bulb is computed with the **psychrometric equation** (iterative,
+physically correct), which reproduces the Snow State chart to within rounding
+(e.g. 14°F at 20% RH → 9°F wet bulb, 30°F at 50% → 25°F). The simpler Stull
+approximation is off by 2–3°F in the cold, dry air that matters most for
+snowmaking, so it's offered only as an alternative. The app's chart values are
+validated against published Snow State cells in the test suite.
 
 ---
 
@@ -63,6 +72,12 @@ PSI = 4000 × (GPM / NozzleNumber)^2
 # 6 GPM, NN 14 -> 4000 × (6/14)^2 = 735 PSI
 ```
 
+**Flow** (the Snow State flow chart, inverse again):
+```
+GPM = NozzleNumber × sqrt(PSI / 4000)
+# NN 6 @ 700 PSI -> 2.5 GPM ; NN 60 @ 1200 PSI -> 32.9 GPM  (matches chart)
+```
+
 **Pump horsepower**:
 ```
 Hydraulic HP = (GPM × TotalPSI) / 1714
@@ -79,8 +94,10 @@ GPM = (BucketGallons × 60) / FillSeconds
 
 **Wet bulb**:
 ```
-Method A (Stull, temp + RH): industry-standard approximation (computed in C)
-Method B (dew point):        Tw = (2/3)·T + (1/3)·Td
+Method P (psychrometric): solve  e_actual = e_s(Tw) - gamma·(T - Tw)  for Tw
+                          (default; matches the Snow State chart)
+Method A (Stull):         closed-form approximation from temp + RH
+Method B (dew point):     Tw = (2/3)·T + (1/3)·Td
 ```
 
 > ⚠️ **Pressure is theoretical.** Real pressure at your pump/gun differs due to
