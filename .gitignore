@@ -1,3 +1,6 @@
+# Build artifacts / distributables (uploaded to GitHub Releases, not committed)
+dist/
+
 # Python
 __pycache__/
 *.py[cod]
