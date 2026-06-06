@@ -43,10 +43,10 @@ def test_wet_bulb_f_auto_is_psychrometric():
     assert math.isclose(via_auto, via_psy, abs_tol=1e-9)
 
 
-# --- Validate the psychrometric method against published Snow State cells ---
+# --- Validate the psychrometric method against published chart cells ---
 # (temp_F, RH%, chart wet bulb F). These are read directly from the official
-# Snow State Wet Bulb Temperature Chart.
-SNOW_STATE_CELLS = [
+# wet bulb temperature chart.
+PUBLISHED_CHART_CELLS = [
     (14, 20, 9),
     (14, 100, 14),
     (20, 20, 14),
@@ -58,8 +58,8 @@ SNOW_STATE_CELLS = [
 ]
 
 
-def test_psychrometric_matches_snow_state_chart():
-    for temp, rh, expected in SNOW_STATE_CELLS:
+def test_psychrometric_matches_published_chart():
+    for temp, rh, expected in PUBLISHED_CHART_CELLS:
         got = wb.chart_value(temp, rh)
         assert abs(got - expected) <= 1, (
             f"{temp}F/{rh}% -> got {got}, chart says {expected}"

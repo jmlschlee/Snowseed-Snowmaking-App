@@ -127,7 +127,7 @@ with tab_forecast:
         method_label = st.selectbox(
             "Wet bulb method",
             [
-                "Psychrometric (matches Snow State)",
+                "Psychrometric (matches the chart)",
                 "Stull approximation",
                 "Dew point (2/3,1/3)",
             ],
@@ -139,7 +139,7 @@ with tab_forecast:
     )
 
     method = {
-        "Psychrometric (matches Snow State)": "psychrometric",
+        "Psychrometric (matches the chart)": "psychrometric",
         "Stull approximation": "stull",
         "Dew point (2/3,1/3)": "dewpoint",
     }[method_label]
@@ -285,10 +285,10 @@ with tab_forecast:
                 unsafe_allow_html=True,
             )
 
-    with st.expander("Snow State Wet Bulb Chart (reference)"):
+    with st.expander("Wet Bulb Reference Chart"):
         st.caption(
             "Wet bulb (F) for each air temperature and humidity, computed with "
-            "the psychrometric method that matches the official Snow State chart "
+            "the psychrometric method (the physically correct wet bulb) "
             "(e.g. 14F at 20% RH = 9F wet bulb). Cells are colored by rating."
         )
         st.plotly_chart(charts.wetbulb_reference_chart(), use_container_width=True)
@@ -301,7 +301,7 @@ with tab_nozzle:
     st.subheader("What nozzle number do I need?")
     st.write(
         "Enter your available water flow and the pressure you want at the gun. "
-        "This uses the Snow State nozzle formula."
+        "This uses the standard snowmaking nozzle formula."
     )
 
     c1, c2 = st.columns(2)
@@ -352,7 +352,7 @@ with tab_nozzle:
     with st.expander("Nozzle number -> orifice diameter chart"):
         st.table(nozzle_calculator.chart_rows())
 
-    with st.expander("Snow State Nozzle Flow Chart (GPM by nozzle # and PSI)"):
+    with st.expander("Nozzle Flow Chart (GPM by nozzle # and PSI)"):
         st.caption(
             "Expected flow (GPM) through a system with a given total nozzle "
             "number at each pressure - reproduced exactly from the formula "

@@ -1,4 +1,4 @@
-"""Tests for the pressure calculator (inverse Snow State formula)."""
+"""Tests for the pressure calculator (inverse standard snowmaking formula)."""
 
 import math
 import os

@@ -1,4 +1,4 @@
-"""Tests for the nozzle calculator math (Snow State formula)."""
+"""Tests for the nozzle calculator math (standard snowmaking formula)."""
 
 import math
 import os
@@ -62,8 +62,8 @@ def test_invalid_inputs_raise():
         nc.nozzle_number(6, 0)
 
 
-# --- Flow lookup (gpm = NN * sqrt(PSI/4000)) vs published Snow State chart ---
-# (nozzle_number, PSI, chart GPM) read from the Snow State Nozzle Flow Chart.
+# --- Flow lookup (gpm = NN * sqrt(PSI/4000)) vs published snowmaking chart ---
+# (nozzle_number, PSI, chart GPM) read from the nozzle flow chart.
 FLOW_CELLS = [
     (6, 700, 2.5),
     (1, 100, 0.2),
@@ -75,7 +75,7 @@ FLOW_CELLS = [
 ]
 
 
-def test_flow_matches_snow_state_chart():
+def test_flow_matches_published_chart():
     for nn, psi, expected in FLOW_CELLS:
         got = round(nc.flow_gpm(nn, psi), 1)
         assert abs(got - expected) <= 0.1, f"NN{nn}@{psi} -> {got}, chart {expected}"

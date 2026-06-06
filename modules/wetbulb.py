@@ -6,12 +6,12 @@ Wet bulb temperature calculations + snowmaking quality rating.
 
 THREE wet bulb methods are provided, in order of accuracy:
 
-  Method P - Psychrometric (DEFAULT, matches the Snow State chart).
+  Method P - Psychrometric (DEFAULT, matches the standard wet bulb chart).
       Solves the psychrometer equation iteratively:
           e_actual = e_s(Tw) - gamma * (T - Tw)
       where e_s() is saturation vapor pressure (Tetens, over water) and
       gamma is the psychrometric constant (~0.000665 * P). This is the
-      physically correct wet bulb and reproduces the Snow State Wet Bulb
+      physically correct wet bulb and reproduces the standard snowmaking Wet Bulb
       Temperature Chart to within rounding (e.g. 14F/20%RH -> 9F, 30F/50% ->
       25F). Stull is notably off in the cold, dry air typical of snowmaking,
       so psychrometric is the default.
@@ -178,18 +178,18 @@ def wet_bulb_f(
 
 
 # ---------------------------------------------------------------------------
-# Snow State Wet Bulb Temperature Chart (generated from the psychrometric
+# wet bulb temperature chart (generated from the psychrometric
 # method, which matches the published chart). Returned as integer F like the
 # chart. Validated against published cells in tests/test_wetbulb_chart.py.
 # ---------------------------------------------------------------------------
 def chart_value(temp_f: int, rh_percent: int) -> int:
-    """The Snow State chart's wet bulb (rounded F) for a (temp, RH) cell."""
+    """The standard wet bulb chart's wet bulb (rounded F) for a (temp, RH) cell."""
     return round(wet_bulb_psychrometric_f(float(temp_f), float(rh_percent)))
 
 
 def build_wetbulb_chart() -> Tuple[List[int], List[int], List[List[int]]]:
     """
-    Return (temps_F, rh_columns, grid) reproducing the Snow State chart.
+    Return (temps_F, rh_columns, grid) reproducing the standard wet bulb chart.
     grid[i][j] = wet bulb (F) at temps_F[i], rh_columns[j].
     """
     temps = config.WETBULB_CHART_TEMPS_F
@@ -209,7 +209,7 @@ def rate_wet_bulb(wet_bulb_f_value: float, strict: bool = False) -> str:
     """
     Map a wet bulb temperature (F) to a snowmaking rating key.
 
-    Thresholds follow the Snow State chart (Borderline = 28F, Too Warm >= 29F).
+    Thresholds follow the standard wet bulb chart (Borderline = 28F, Too Warm >= 29F).
     Anything warmer than the last threshold is config.TOO_WARM.
     """
     for rating, upper in _thresholds(strict):

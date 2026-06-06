@@ -24,7 +24,7 @@ Snowmaking depends on **wet bulb temperature**, which combines air temperature
 water below the air temperature, so you can sometimes make snow even when it's
 above freezing outside.
 
-Categories and labels match the official **Snow State Wet Bulb Temperature Chart**:
+Categories and labels match the official **wet bulb temperature chart**:
 
 | Wet bulb (F) | Rating | What to expect |
 |---|---|---|
@@ -38,11 +38,11 @@ A **strict mode** collapses these into *Possible (≤27) / Borderline (28) / Too
 warm (≥29)*. Thresholds are configurable in [`modules/config.py`](modules/config.py).
 
 **Accuracy:** wet bulb is computed with the **psychrometric equation** (iterative,
-physically correct), which reproduces the Snow State chart to within rounding
+physically correct), which reproduces the standard wet bulb chart to within rounding
 (e.g. 14°F at 20% RH → 9°F wet bulb, 30°F at 50% → 25°F). The simpler Stull
 approximation is off by 2–3°F in the cold, dry air that matters most for
 snowmaking, so it's offered only as an alternative. The app's chart values are
-validated against published Snow State cells in the test suite.
+validated against published chart cells in the test suite.
 
 ---
 
@@ -61,7 +61,7 @@ validated against published Snow State cells in the test suite.
 Every formula is in code comments **and** here. See [`tests/`](tests/) for the
 validating examples.
 
-**Nozzle number** (Snow State formula):
+**Nozzle number** (standard snowmaking formula):
 ```
 NozzleNumber = GPM × sqrt(4000 / PSI)
 # 6 GPM @ 700 PSI -> 6 × sqrt(4000/700) = 14.35 -> 14
@@ -73,7 +73,7 @@ PSI = 4000 × (GPM / NozzleNumber)^2
 # 6 GPM, NN 14 -> 4000 × (6/14)^2 = 735 PSI
 ```
 
-**Flow** (the Snow State flow chart, inverse again):
+**Flow** (the flow chart, inverse again):
 ```
 GPM = NozzleNumber × sqrt(PSI / 4000)
 # NN 6 @ 700 PSI -> 2.5 GPM ; NN 60 @ 1200 PSI -> 32.9 GPM  (matches chart)
@@ -96,7 +96,7 @@ GPM = (BucketGallons × 60) / FillSeconds
 **Wet bulb**:
 ```
 Method P (psychrometric): solve  e_actual = e_s(Tw) - gamma·(T - Tw)  for Tw
-                          (default; matches the Snow State chart)
+                          (default; matches the standard wet bulb chart)
 Method A (Stull):         closed-form approximation from temp + RH
 Method B (dew point):     Tw = (2/3)·T + (1/3)·Td
 ```

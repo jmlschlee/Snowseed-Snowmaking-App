@@ -10,7 +10,7 @@ Everything that a user or maintainer might want to tune lives here:
   * Nozzle calculator constants
   * Pump calculator default efficiencies / safety margin
   * Weather API settings (URLs, forecast length)
-  * The Snow State nozzle-number -> orifice-diameter chart
+  * The snowmaking nozzle-number -> orifice-diameter chart
 
 Keeping these in one place means the "science" is transparent and easy to audit.
 """
@@ -22,7 +22,7 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 APP_NAME = "Snowseed Snowmaking"
 APP_TAGLINE = "Home snowmaking planning, made simple."
-APP_VERSION = "1.1.1"
+APP_VERSION = "1.1.2"
 
 # ---------------------------------------------------------------------------
 # Wet bulb quality categories
@@ -32,7 +32,7 @@ APP_VERSION = "1.1.1"
 #
 # Science note (baked into these numbers):
 #   - Snowmaking generally becomes possible around/below 27 F wet bulb.
-#   - Snow State language: snowmaking becomes possible below 28 F wet bulb.
+#   - Common industry guidance: snowmaking becomes possible below 28 F wet bulb.
 #   - 28-29 F wet bulb is borderline and may produce slushy snow.
 #   - Efficiency improves dramatically as wet bulb drops into the mid-20s.
 #   - Ideal home conditions are roughly below 20 F wet bulb with little wind.
@@ -45,7 +45,7 @@ BORDERLINE = "borderline"
 TOO_WARM = "too_warm"
 POSSIBLE = "possible"
 
-# Human-friendly labels (match the Snow State Wet Bulb Temperature Chart exactly).
+# Human-friendly labels (match the wet bulb temperature chart exactly).
 RATING_LABELS = {
     EXCELLENT: "Great Snowmaking",
     GOOD: "Good Snowmaking",
@@ -140,11 +140,11 @@ WIND_CAUTION_MPH = 10.0
 # ---------------------------------------------------------------------------
 # Nozzle calculator constants
 # ---------------------------------------------------------------------------
-# Snow State nozzle formula:  NozzleNumber = GPM * sqrt(NOZZLE_K / PSI)
+# standard snowmaking nozzle formula:  NozzleNumber = GPM * sqrt(NOZZLE_K / PSI)
 # Validated against the published chart (6 GPM @ 700 PSI -> ~14.35 -> 14).
 NOZZLE_K = 4000.0
 
-# Snow State nozzle-number -> orifice diameter (inches).
+# snowmaking nozzle-number -> orifice diameter (inches).
 # Used for combination suggestions and the reference table.
 NOZZLE_CHART = {
     1.0: 0.025,
@@ -182,15 +182,15 @@ NOZZLE_CHART = {
 PSI_MIN_TYPICAL = 100.0
 PSI_MAX_TYPICAL = 1000.0
 
-# Recommended operating pressure (Snow State: ~700 psi for optimal performance
+# Recommended operating pressure (Industry guidance: ~700 psi for optimal performance
 # across a wide range of temperatures).
 RECOMMENDED_PSI = 700.0
 
-# Pressure columns used by the Snow State nozzle FLOW chart (PSI).
+# Pressure columns used by the nozzle flow chart (PSI).
 FLOW_CHART_PRESSURES = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200]
 
 # ---------------------------------------------------------------------------
-# Wet bulb chart grid (matches the Snow State Wet Bulb Temperature Chart axes)
+# Wet bulb chart grid (matches the wet bulb temperature chart axes)
 # ---------------------------------------------------------------------------
 # Dry-bulb air temperature rows (F): 14..38 inclusive.
 WETBULB_CHART_TEMPS_F = list(range(14, 39))
@@ -198,7 +198,7 @@ WETBULB_CHART_TEMPS_F = list(range(14, 39))
 WETBULB_CHART_RH = list(range(20, 101, 5))
 
 # Standard sea-level atmospheric pressure (kPa) used by the psychrometric
-# wet-bulb solver. The Snow State chart is computed at standard pressure.
+# wet-bulb solver. The standard wet bulb chart is computed at standard pressure.
 STANDARD_PRESSURE_KPA = 101.325
 
 # ---------------------------------------------------------------------------

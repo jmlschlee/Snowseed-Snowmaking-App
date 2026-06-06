@@ -64,7 +64,7 @@ def night_quality_bar(nights: List[NightSummary]) -> go.Figure:
 
 def wetbulb_reference_chart() -> go.Figure:
     """
-    Reproduce the Snow State Wet Bulb Temperature Chart as a heatmap, colored
+    Reproduce the wet bulb temperature chart as a heatmap, colored
     by snowmaking rating (computed via the psychrometric method that matches
     the published chart). Rows = air temp (F), columns = relative humidity (%).
     """
@@ -97,7 +97,7 @@ def wetbulb_reference_chart() -> go.Figure:
         )
     )
     fig.update_layout(
-        title="Snow State Wet Bulb Chart (wet bulb F by air temp & humidity)",
+        title="Wet Bulb Chart (wet bulb F by air temp & humidity)",
         xaxis_title="Relative humidity",
         yaxis_title="Air temperature (F)",
         height=560,

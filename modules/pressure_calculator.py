@@ -2,7 +2,7 @@
 modules/pressure_calculator.py
 ==============================
 
-Inverse of the Snow State nozzle formula: estimate operating pressure from
+Inverse of the standard snowmaking nozzle formula: estimate operating pressure from
 flow and total nozzle number.
 
 Derivation (from NN = GPM * sqrt(K / PSI), K = 4000):

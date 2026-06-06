@@ -2,9 +2,9 @@
 modules/nozzle_calculator.py
 ============================
 
-Snow State nozzle math + nozzle-combination helper.
+snowmaking nozzle math + nozzle-combination helper.
 
-Core formula (validated against the published Snow State chart):
+Core formula (validated against the published snowmaking chart):
 
     NozzleNumber = GPM * sqrt(K / PSI)        where K = 4000
 
@@ -50,7 +50,7 @@ def nozzle_number(gpm: float, psi: float) -> float:
 def flow_gpm(nozzle_number: float, psi: float) -> float:
     """
     Flow rate (GPM) for a given total nozzle number and pressure - the inverse
-    of the nozzle formula, and exactly what the Snow State FLOW chart tabulates.
+    of the nozzle formula, and exactly what the flow chart tabulates.
 
         gpm = NN * sqrt(PSI / K)
 
@@ -66,7 +66,7 @@ def flow_gpm(nozzle_number: float, psi: float) -> float:
 
 def flow_chart_rows() -> List[Dict[str, float]]:
     """
-    Reproduce the Snow State nozzle FLOW chart: for each chart nozzle size,
+    Reproduce the nozzle flow chart: for each chart nozzle size,
     the flow (GPM, 1 decimal) at each standard pressure column, plus orifice.
     """
     rows: List[Dict[str, float]] = []
